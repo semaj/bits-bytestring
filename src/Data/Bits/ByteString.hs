@@ -22,17 +22,22 @@ import            Data.Bits
 import qualified  Data.ByteString as B
 import            Data.Word
 
+
 bytestringAND :: B.ByteString -> B.ByteString -> B.ByteString
 bytestringAND a b = B.pack $ B.zipWith (.&.) a b
+
 
 bytestringOR :: B.ByteString -> B.ByteString -> B.ByteString
 bytestringOR a b = B.pack $ B.zipWith (.|.) a b
 
+
 bytestringXOR :: B.ByteString -> B.ByteString -> B.ByteString
 bytestringXOR a b = B.pack $ B.zipWith xor a b
 
+
 bytestringComplement :: B.ByteString -> B.ByteString
 bytestringComplement = B.map complement
+
 
 bytestringShift :: B.ByteString -> Int -> B.ByteString
 bytestringShift x i
@@ -46,8 +51,7 @@ bytestringShiftR bs 0 = bs
 bytestringShiftR "" _ = B.empty
 bytestringShiftR bs i =
     B.pack $ dropWhile (==0) $
-      go (i `mod` 8) 0 $
-        take (B.length bs - (i `mod` 8)) (B.unpack bs)
+      go (i `mod` 8) 0 (B.unpack bs)
   where
   go j w1 [] = []
   go j w1 (w2:wst) = (maskR j w1 w2) : go j w2 wst
@@ -73,26 +77,34 @@ bytestringRotate x i
   | i > 0     = x `bytestringRotateL` i
   | otherwise = x
 
+
 bytestringRotateR :: B.ByteString -> Int -> B.ByteString
 bytestringRotateR x i = undefined
+
 
 bytestringRotateL :: B.ByteString -> Int -> B.ByteString
 bytestringRotateL x i = undefined
 
+
 bytestringBitSize :: B.ByteString -> Int
 bytestringBitSize x = undefined
+
 
 bytestringBitSizeMaybe :: B.ByteString -> Maybe Int
 bytestringBitSizeMaybe x = undefined
 
+
 bytestringIsSigned :: B.ByteString -> Bool
 bytestringIsSigned x = False
+
 
 bytestringTestBit :: B.ByteString -> Int -> Bool
 bytestringTestBit x i = undefined
 
+
 bytestringBit :: Int -> B.ByteString
 bytestringBit i = (bit $ mod i 8) `B.cons` (B.replicate (div i 8) (255 :: Word8))
+
 
 bytestringPopCount :: B.ByteString -> Int
 bytestringPopCount x = undefined
