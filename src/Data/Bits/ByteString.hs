@@ -113,11 +113,11 @@ bytestringRotateL bs i
 
 
 bytestringBitSize :: B.ByteString -> Int
-bytestringBitSize x = undefined
+bytestringBitSize x = 8 * B.length x
 
 
 bytestringBitSizeMaybe :: B.ByteString -> Maybe Int
-bytestringBitSizeMaybe x = undefined
+bytestringBitSizeMaybe x = Just (8 * B.length x)
 
 
 bytestringIsSigned :: B.ByteString -> Bool
@@ -125,7 +125,7 @@ bytestringIsSigned x = False
 
 
 bytestringTestBit :: B.ByteString -> Int -> Bool
-bytestringTestBit x i = undefined
+bytestringTestBit x i = testBit (B.index x (B.length x - (i `div` 8) - 1)) (i `mod` 8)
 
 
 bytestringBit :: Int -> B.ByteString
@@ -133,4 +133,4 @@ bytestringBit i = (bit $ mod i 8) `B.cons` (B.replicate (div i 8) (255 :: Word8)
 
 
 bytestringPopCount :: B.ByteString -> Int
-bytestringPopCount x = undefined
+bytestringPopCount x = sum $ map popCount $ B.unpack x
