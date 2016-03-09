@@ -79,11 +79,37 @@ bytestringRotate x i
 
 
 bytestringRotateR :: B.ByteString -> Int -> B.ByteString
-bytestringRotateR x i = undefined
+bytestringRotateR bs 0 = bs
+bytestringRotateR bs i
+    | B.length bs == 0 = B.empty
+    | B.length bs == 1 = B.singleton (rotateR (bs `B.index` 0) i)
+    | B.length bs > 1 = do
+      let shiftedWords =
+            B.append
+              (B.drop (nWholeWordsToShift i) bs)
+              (B.take (nWholeWordsToShift i) bs)
+      let tmpShiftedBits = (bytestringShiftR shiftedWords (i `mod` 8))
+      let rotatedBits = (shiftL (B.last shiftedWords) (8 - (i `mod` 8))) .|. (B.head tmpShiftedBits)
+      rotatedBits `B.cons` (B.tail tmpShiftedBits)
+  where
+  nWholeWordsToShift n =  (B.length bs - (n `div` 8))
 
 
 bytestringRotateL :: B.ByteString -> Int -> B.ByteString
-bytestringRotateL x i = undefined
+bytestringRotateL bs 0 = bs
+bytestringRotateL bs i
+    | B.length bs == 0 = B.empty
+    | B.length bs == 1 = B.singleton (rotateL (bs `B.index` 0) i)
+    | B.length bs > 1 = do
+      let shiftedWords =
+            B.append
+              (B.take (nWholeWordsToShift i) bs)
+              (B.drop (nWholeWordsToShift i) bs)
+      let tmpShiftedBits = (bytestringShiftL shiftedWords (i `mod` 8))
+      let rotatedBits = (shiftR (B.head shiftedWords) (8 - (i `mod` 8))) .|. (B.last tmpShiftedBits)
+      (B.tail tmpShiftedBits) `B.snoc` rotatedBits
+  where
+  nWholeWordsToShift n = (B.length bs - (n `div` 8))
 
 
 bytestringBitSize :: B.ByteString -> Int
