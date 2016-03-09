@@ -2,7 +2,7 @@ name:                   bits-bytestring
 version:                0.1.0.0
 synopsis:               Bits instance for bytestrings.
 description:            Please see README.md
-homepage:               http://github.com/oldmanmike/bits-bytestring
+homepage:               https://github.com/oldmanmike/bits-bytestring
 bug-reports:            https://github.com/oldmanmike/bits-bytestring/issues
 license:                BSD3
 license-file:           LICENSE
