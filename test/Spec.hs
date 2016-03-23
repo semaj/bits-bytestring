@@ -36,8 +36,8 @@ prop_AssociativityXOR a b c = (a `xor` (b `xor` c)) == ((a `xor` b) `xor` c)
 prop_IdentityComplement :: B.ByteString -> Bool
 prop_IdentityComplement x = x == complement (complement x)
 
-prop_IdentityShift :: B.ByteString -> Int -> Bool
-prop_IdentityShift x i = x == shiftR (shiftL x i) i
+prop_LengthIdentityShift :: B.ByteString -> Int -> Bool
+prop_LengthIdentityShift x i = (B.length x) == (B.length $ shiftR (shiftL x i) i)
 
 prop_IdentityRotate :: B.ByteString -> Int -> Bool
 prop_IdentityRotate x i = x == rotateR (rotateL x i) i
@@ -54,4 +54,5 @@ main = do
   quickCheck prop_CommutativityXOR
   quickCheck prop_AssociativityXOR
   quickCheck prop_IdentityComplement
+  quickCheck prop_LengthIdentityShift
   quickCheck prop_IdentityRotate
