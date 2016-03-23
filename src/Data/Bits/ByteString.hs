@@ -37,10 +37,15 @@ instance Bits B.ByteString where
 
   shiftR bs 0 = bs
   shiftR "" _ = B.empty
-  shiftR bs i =
-      B.pack
-        $ (replicate (i `div` 8) (0 :: Word8))
-        ++ (go (i `mod` 8) 0 $ B.unpack (B.take (B.length bs - (i `div` 8)) bs))
+  shiftR bs i
+      | i `mod` 8 == 0 = 
+        B.take (B.length bs) $ B.append 
+          (B.replicate (i `div` 8) 0)
+          (B.drop (i `div` 8) bs)
+      | i `mod` 8 /= 0 = 
+        B.pack $ take (B.length bs)
+          $ (replicate (i `div` 8) (0 :: Word8))
+          ++ (go (i `mod` 8) 0 $ B.unpack (B.take (B.length bs - (i `div` 8)) bs))
     where
     go _ _ [] = []
     go j w1 (w2:wst) = (maskR j w1 w2) : go j w2 wst
@@ -49,10 +54,15 @@ instance Bits B.ByteString where
 
   shiftL bs 0 = bs
   shiftL "" _ = B.empty
-  shiftL bs i =
-      B.pack
-        $ (tail (go (i `mod` 8) 0 $ B.unpack (B.drop (i `div` 8) bs)))
-        ++ (replicate (i `div` 8) 0)
+  shiftL bs i
+      | i `mod` 8 == 0 =
+        B.take (B.length bs) $ B.append
+          (B.drop (i `div` 8) bs)
+          (B.replicate (i `div` 8) 0)
+      | i `mod` 8 /= 0 =
+        B.pack
+          $ (tail (go (i `mod` 8) 0 $ B.unpack (B.drop (i `div` 8) bs)))
+          ++ (replicate (i `div` 8) 0)
     where
     go j w1 [] = [shiftL w1 j]
     go j w1 (w2:wst) = (maskL j w1 w2) : go j w2 wst
@@ -85,11 +95,14 @@ instance Bits B.ByteString where
   rotateL bs i
       | B.length bs == 0 = B.empty
       | B.length bs == 1 = B.singleton (rotateL (bs `B.index` 0) i)
+      | i `mod` 8 == 0 = B.append
+                          (B.drop (i `div` 8) bs)
+                          (B.take (i `div` 8) bs)
       | B.length bs > 1 = do
         let shiftedWords =
               B.append
-                (B.take (nWholeWordsToShift i) bs)
-                (B.drop (nWholeWordsToShift i) bs)
+                (B.drop (i `div` 8) bs)
+                (B.take (i `div` 8) bs)
         let tmpShiftedBits = (shiftL shiftedWords (i `mod` 8))
         let rotatedBits = (shiftR (B.head shiftedWords) (8 - (i `mod` 8))) .|. (B.last tmpShiftedBits)
         (B.tail tmpShiftedBits) `B.snoc` rotatedBits
