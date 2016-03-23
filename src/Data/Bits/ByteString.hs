@@ -38,8 +38,9 @@ instance Bits B.ByteString where
   shiftR bs 0 = bs
   shiftR "" _ = B.empty
   shiftR bs i =
-      B.pack $ dropWhile (==0) $
-        go (i `mod` 8) 0 (B.unpack bs)
+      B.pack
+        $ (replicate (i `div` 8) (0 :: Word8))
+        ++ (go (i `mod` 8) 0 $ B.unpack (B.take (B.length bs - (i `div` 8)) bs))
     where
     go _ _ [] = []
     go j w1 (w2:wst) = (maskR j w1 w2) : go j w2 wst
@@ -49,8 +50,8 @@ instance Bits B.ByteString where
   shiftL bs 0 = bs
   shiftL "" _ = B.empty
   shiftL bs i =
-      B.pack $ dropWhile (==0)
-        $ (go (i `mod` 8) 0 (B.unpack bs))
+      B.pack
+        $ (tail (go (i `mod` 8) 0 $ B.unpack (B.drop (i `div` 8) bs)))
         ++ (replicate (i `div` 8) 0)
     where
     go j w1 [] = [shiftL w1 j]

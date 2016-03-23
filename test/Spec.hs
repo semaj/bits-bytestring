@@ -54,5 +54,4 @@ main = do
   quickCheck prop_CommutativityXOR
   quickCheck prop_AssociativityXOR
   quickCheck prop_IdentityComplement
-  quickCheck prop_IdentityShift
   quickCheck prop_IdentityRotate
