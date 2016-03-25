@@ -1,6 +1,7 @@
 import            Data.Bits
 import            Data.Bits.ByteString
 import qualified  Data.ByteString as B
+import            Test.Hspec
 import            Test.QuickCheck hiding ((.&.))
 
 instance Arbitrary B.ByteString where
@@ -36,6 +37,12 @@ prop_AssociativityXOR a b c = (a `xor` (b `xor` c)) == ((a `xor` b) `xor` c)
 prop_IdentityComplement :: B.ByteString -> Bool
 prop_IdentityComplement x = x == complement (complement x)
 
+prop_LengthIdentityShiftL :: B.ByteString -> Int -> Bool
+prop_LengthIdentityShiftL x i = (B.length x) == (B.length $ shiftL x i)
+
+prop_LengthIdentityShiftR :: B.ByteString -> Int -> Bool
+prop_LengthIdentityShiftR x i = (B.length x) == (B.length $ shiftR x i)
+
 prop_LengthIdentityShift :: B.ByteString -> Int -> Bool
 prop_LengthIdentityShift x i = (B.length x) == (B.length $ shiftR (shiftL x i) i)
 
@@ -43,16 +50,30 @@ prop_IdentityRotate :: B.ByteString -> Int -> Bool
 prop_IdentityRotate x i = x == rotateR (rotateL x i) i
 
 main :: IO ()
-main = do
-  quickCheck prop_IdentityAND
-  quickCheck prop_CommutativityAND
-  quickCheck prop_AssociativityAND
-  quickCheck prop_IdentityOR
-  quickCheck prop_CommutativityOR
-  quickCheck prop_AssociativityOR
-  quickCheck prop_IdentityXOR
-  quickCheck prop_CommutativityXOR
-  quickCheck prop_AssociativityXOR
-  quickCheck prop_IdentityComplement
-  quickCheck prop_LengthIdentityShift
-  quickCheck prop_IdentityRotate
+main = hspec $ do
+  describe "AND" $ do
+    context "Should have the following properties:" $ do
+      it "Identity" $ property prop_IdentityAND
+      it "Commutativity" $ property prop_CommutativityAND
+      it "Associativity" $ property prop_AssociativityAND
+  describe "OR" $ do
+    context "Should have the following properties:" $ do
+      it "Identity" $ property prop_IdentityOR
+      it "Commutativity" $ property prop_CommutativityOR
+      it "Associativity" $ property prop_AssociativityOR
+  describe "XOR" $ do
+    context "Should have the following properties:" $ do
+      it "Identity" $ property prop_IdentityXOR
+      it "Commutativity" $ property prop_CommutativityXOR
+      it "Associativity" $ property prop_AssociativityXOR
+  describe "Complement" $ do
+    context "Should have the following properties:" $ do
+      it "Identity" $ property prop_IdentityComplement
+  describe "Shift" $ do
+    context "Should have the following properties:" $ do
+      it "Length should not change on ShiftL" $ property prop_LengthIdentityShiftL
+      it "Length should not change on ShiftR" $ property prop_LengthIdentityShiftR
+      it "Length should not change on Shift" $ property prop_LengthIdentityShift
+  describe "Rotate" $ do
+    context "Should have the following properties:" $ do
+      it "Identity" $ property prop_IdentityRotate
