@@ -4,13 +4,13 @@ A `ByteString` instance for the `Bits` typeclass, providing bitwise operators fo
 
 ## Installation
 
-To install bits-bytestring, use stack and add `bits-bytestring-1.0.0.0` to `extra-deps`:
+To install bits-bytestring, use stack and add `bits-bytestring-1.0.0.0` to `extra-deps` in `stack.yaml`:
 
 ```yaml
 extra-deps: [bits-bytestring-1.0.0.0]
 ```
 
-Then add `bits-bytestring to your cabal file or just run:
+Then add `bits-bytestring` to your cabal file or just run:
 
 ```bash
 stack install bits-bytestring
@@ -29,13 +29,25 @@ import           Data.Bits.ByteString
 -- cryptohash example
 import qualified Crypto.Hash.SHA512 as SHA512
 
+main :: IO ()
 main = do
   let bs1 = SHA512.hash (B.pack [0..255])
   let bs2 = (B.replicate 64 0)
-  let example1 = bs1 .&. bs2
-  let example2 = bs1 .|. bs2
-  let example3 = bs1 `xor` bs2
-  print example1
-  print example2
-  print example3
+  print $ bs1 .&. bs2
+  print $ bs1 .|. bs2
+  print $ bs1 `xor` bs2
+  print $ shift bs1 5
+  print $ rotate bs1 13
 ```
+
+## Contributions
+
+Pull requests and bug reports are welcome!
+
+If you need to contact me, the following ways are best and in this order:
+
+* Post to the Github repo with an issue or pull request
+* Email me: mcarpenter.dev@gmail.com, oldmanmike.dev@gmail.com
+* IRC: #haskell, #haskell-beginners, #haskell-game
+
+- Michael Carpenter

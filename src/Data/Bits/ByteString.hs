@@ -1,4 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# OPTIONS_GHC -fno-warn-orphans #-}
 -------------------------------------------------------------------------------
 -- |
 -- Module       : Data.Bits.ByteString
@@ -50,6 +51,7 @@ instance Bits B.ByteString where
     go _ _ [] = []
     go j w1 (w2:wst) = (maskR j w1 w2) : go j w2 wst
     maskR j w1 w2 = (shiftL w1 (8-j)) .|. (shiftR w2 j)
+  shiftR _ _ = error "I can't believe you've done this."
   {-# INLINE shiftR #-}
 
   shiftL bs 0 = bs
@@ -67,6 +69,7 @@ instance Bits B.ByteString where
     go j w1 [] = [shiftL w1 j]
     go j w1 (w2:wst) = (maskL j w1 w2) : go j w2 wst
     maskL j w1 w2 = (shiftL w1 j) .|. (shiftR w2 (8-j))
+  shiftL _ _ = error "I can't believe you've done this."
   {-# INLINE shiftL #-}
 
   rotate x i
@@ -89,6 +92,7 @@ instance Bits B.ByteString where
         rotatedBits `B.cons` (B.tail tmpShiftedBits)
     where
     nWholeWordsToShift n =  (B.length bs - (n `div` 8))
+  rotateR _ _ = error "I can't believe you've done this."
   {-# INLINE rotateR #-}
 
   rotateL bs 0 = bs
@@ -106,8 +110,7 @@ instance Bits B.ByteString where
         let tmpShiftedBits = (shiftL shiftedWords (i `mod` 8))
         let rotatedBits = (shiftR (B.head shiftedWords) (8 - (i `mod` 8))) .|. (B.last tmpShiftedBits)
         (B.init tmpShiftedBits) `B.snoc` rotatedBits
-    where
-    nWholeWordsToShift n = (B.length bs - (n `div` 8))
+  rotateL _ _ = error "I can't believe you've done this."
   {-# INLINE rotateL #-}
 
   bitSize x = 8 * B.length x
