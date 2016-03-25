@@ -37,14 +37,23 @@ prop_AssociativityXOR a b c = (a `xor` (b `xor` c)) == ((a `xor` b) `xor` c)
 prop_IdentityComplement :: B.ByteString -> Bool
 prop_IdentityComplement x = x == complement (complement x)
 
-prop_LengthIdentityShiftL :: B.ByteString -> Int -> Bool
-prop_LengthIdentityShiftL x i = (B.length x) == (B.length $ shiftL x i)
+prop_ConstantLengthShiftL :: B.ByteString -> Int -> Bool
+prop_ConstantLengthShiftL x i = (B.length x) == (B.length $ shiftL x i)
 
-prop_LengthIdentityShiftR :: B.ByteString -> Int -> Bool
-prop_LengthIdentityShiftR x i = (B.length x) == (B.length $ shiftR x i)
+prop_ConstantLengthShiftR :: B.ByteString -> Int -> Bool
+prop_ConstantLengthShiftR x i = (B.length x) == (B.length $ shiftR x i)
 
-prop_LengthIdentityShift :: B.ByteString -> Int -> Bool
-prop_LengthIdentityShift x i = (B.length x) == (B.length $ shiftR (shiftL x i) i)
+prop_ConstantLengthShift :: B.ByteString -> Int -> Bool
+prop_ConstantLengthShift x i = (B.length x) == (B.length $ shift x i)
+
+prop_ConstantLengthRotateL :: B.ByteString -> Int -> Bool
+prop_ConstantLengthRotateL x i = (B.length x) == (B.length $ rotateL x i)
+
+prop_ConstantLengthRotateR :: B.ByteString -> Int -> Bool
+prop_ConstantLengthRotateR x i = (B.length x) == (B.length $ rotateR x i)
+
+prop_ConstantLengthRotate :: B.ByteString -> Int -> Bool
+prop_ConstantLengthRotate x i = (B.length x) == (B.length $ rotate x i)
 
 prop_IdentityRotate :: B.ByteString -> Int -> Bool
 prop_IdentityRotate x i = x == rotateR (rotateL x i) i
@@ -71,9 +80,12 @@ main = hspec $ do
       it "Identity" $ property prop_IdentityComplement
   describe "Shift" $ do
     context "Should have the following properties:" $ do
-      it "Length should not change on ShiftL" $ property prop_LengthIdentityShiftL
-      it "Length should not change on ShiftR" $ property prop_LengthIdentityShiftR
-      it "Length should not change on Shift" $ property prop_LengthIdentityShift
+      it "Length should not change on ShiftL" $ property prop_ConstantLengthShiftL
+      it "Length should not change on ShiftR" $ property prop_ConstantLengthShiftR
+      it "Length should not change on Shift" $ property prop_ConstantLengthShift
   describe "Rotate" $ do
     context "Should have the following properties:" $ do
+      it "Length should not change on RotateL" $ property prop_ConstantLengthRotateL
+      it "Length should not change on RotateR" $ property prop_ConstantLengthRotateR
+      it "Length should not change on Rotate" $ property prop_ConstantLengthRotate
       it "Identity" $ property prop_IdentityRotate
