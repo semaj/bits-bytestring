@@ -105,7 +105,7 @@ instance Bits B.ByteString where
                 (B.take (i `div` 8) bs)
         let tmpShiftedBits = (shiftL shiftedWords (i `mod` 8))
         let rotatedBits = (shiftR (B.head shiftedWords) (8 - (i `mod` 8))) .|. (B.last tmpShiftedBits)
-        (B.tail tmpShiftedBits) `B.snoc` rotatedBits
+        (B.init tmpShiftedBits) `B.snoc` rotatedBits
     where
     nWholeWordsToShift n = (B.length bs - (n `div` 8))
   {-# INLINE rotateL #-}
