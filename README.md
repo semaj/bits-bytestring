@@ -4,10 +4,10 @@ A `ByteString` instance for the `Bits` typeclass, providing bitwise operators fo
 
 ## Installation
 
-To install bits-bytestring, use stack and add `bits-bytestring-1.0.0.0` to `extra-deps` in `stack.yaml`:
+To install bits-bytestring, use stack and add `bits-bytestring-0.1.0.0` to `extra-deps` in `stack.yaml`:
 
 ```yaml
-extra-deps: [bits-bytestring-1.0.0.0]
+extra-deps: [bits-bytestring-0.1.0.0]
 ```
 
 Then add `bits-bytestring` to your cabal file or just run:
