@@ -38,11 +38,11 @@ instance Bits B.ByteString where
   shiftR bs 0 = bs
   shiftR "" _ = B.empty
   shiftR bs i
-      | i `mod` 8 == 0 = 
-        B.take (B.length bs) $ B.append 
+      | i `mod` 8 == 0 =
+        B.take (B.length bs) $ B.append
           (B.replicate (i `div` 8) 0)
           (B.drop (i `div` 8) bs)
-      | i `mod` 8 /= 0 = 
+      | i `mod` 8 /= 0 =
         B.pack $ take (B.length bs)
           $ (replicate (i `div` 8) (0 :: Word8))
           ++ (go (i `mod` 8) 0 $ B.unpack (B.take (B.length bs - (i `div` 8)) bs))
@@ -60,7 +60,7 @@ instance Bits B.ByteString where
           (B.drop (i `div` 8) bs)
           (B.replicate (i `div` 8) 0)
       | i `mod` 8 /= 0 =
-        B.pack
+        B.pack $ drop ((i `div` 8) - B.length bs)
           $ (tail (go (i `mod` 8) 0 $ B.unpack (B.drop (i `div` 8) bs)))
           ++ (replicate (i `div` 8) 0)
     where
