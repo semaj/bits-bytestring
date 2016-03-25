@@ -1,5 +1,5 @@
 name:                   bits-bytestring
-version:                0.1.0.0
+version:                0.1.0.1
 synopsis:               Bits instance for bytestrings.
 description:            Please see README.md
 homepage:               https://github.com/oldmanmike/bits-bytestring
