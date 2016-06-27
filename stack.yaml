@@ -1,6 +1,9 @@
-resolver: lts-5.5
+resolver: nightly-2016-06-03
 packages:
 - '.'
+- location:
+    git: git@github.com:ekmett/bits.git
+    commit: ff98de1305cd39f2e888135e33b08b3c1592ae53
 extra-deps: []
 flags: {}
 extra-package-dbs: []
