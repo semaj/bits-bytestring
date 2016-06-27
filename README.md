@@ -4,10 +4,10 @@ A `ByteString` instance for the `Bits` typeclass, providing bitwise operators fo
 
 ## Installation
 
-To install bits-bytestring, use stack and add `bits-bytestring-0.1.0.0` to `extra-deps` in `stack.yaml`:
+To install bits-bytestring, use stack and add `bits-bytestring-0.1.0.1` to `extra-deps` in `stack.yaml`:
 
 ```yaml
-extra-deps: [bits-bytestring-0.1.0.0]
+extra-deps: [bits-bytestring-0.1.0.1]
 ```
 
 Then add `bits-bytestring` to your cabal file or just run:
@@ -46,8 +46,6 @@ Pull requests and bug reports are welcome!
 
 If you need to contact me, the following ways are best and in this order:
 
-* Post to the Github repo with an issue or pull request
+* Github: Post an issue or pull request
 * Email me: mcarpenter.dev@gmail.com, oldmanmike.dev@gmail.com
 * IRC: #haskell, #haskell-beginners, #haskell-game
-
-- Michael Carpenter
