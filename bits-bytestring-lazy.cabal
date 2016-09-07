@@ -1,13 +1,13 @@
-name:                   bits-bytestring
+name:                   bits-bytestring-lazy
 version:                0.1.0.1
-synopsis:               Bits instance for bytestrings.
+synopsis:               Bits instance for lazy bytestrings.
 description:            Please see README.md
-homepage:               https://github.com/oldmanmike/bits-bytestring
-bug-reports:            https://github.com/oldmanmike/bits-bytestring/issues
+homepage:               https://github.com/semaj/bits-bytestring-lazy
+bug-reports:            https://github.com/semaj/bits-bytestring-lazy/issues
 license:                BSD3
 license-file:           LICENSE
-author:                 Michael Carpenter
-maintainer:             Michael Carpenter <oldmanmike.dev@gmail.com>
+author:                 Michael Carpenter, James Larisch
+maintainer:             James Larisch <james@jameslarisch.com>
 copyright:              Copyright (C) 2016 Michael Carpenter
 category:               Data
 build-type:             Simple
@@ -23,13 +23,13 @@ library
                         bytestring
   default-language:     Haskell2010
 
-test-suite bits-bytestring-test
+test-suite bits-bytestring-lazy-test
   type:                 exitcode-stdio-1.0
   hs-source-dirs:       test
   main-is:              Spec.hs
   build-depends:        base,
                         bits,
-                        bits-bytestring,
+                        bits-bytestring-lazy,
                         bytestring,
                         hspec,
                         QuickCheck

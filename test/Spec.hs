@@ -1,8 +1,8 @@
-import            Data.Bits
-import            Data.Bits.ByteString
-import qualified  Data.ByteString as B
-import            Test.Hspec
-import            Test.QuickCheck hiding ((.&.))
+import           Data.Bits
+import           Data.Bits.ByteString.Lazy
+import qualified Data.ByteString.Lazy as B
+import           Test.Hspec
+import           Test.QuickCheck hiding ((.&.))
 
 instance Arbitrary B.ByteString where
   arbitrary = fmap B.pack (listOf arbitrary)

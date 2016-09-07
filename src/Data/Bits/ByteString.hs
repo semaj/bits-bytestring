@@ -10,11 +10,18 @@
 -- Portability  : portable
 --
 -------------------------------------------------------------------------------
-module Data.Bits.ByteString where
+module Data.Bits.ByteString.Lazy where
 
-import            Data.Bits
-import qualified  Data.ByteString as B
-import            Data.Word
+import           Data.Bits
+import qualified Data.ByteString.Lazy as B
+import           Data.Word
+import qualified GHC.Int as G
+
+intToInt64 :: Int -> G.Int64
+intToInt64 = fromIntegral
+
+int64ToInt :: G.Int64 -> Int
+int64ToInt = fromIntegral
 
 instance Bits B.ByteString where
 
@@ -41,12 +48,12 @@ instance Bits B.ByteString where
   shiftR bs i
       | i `mod` 8 == 0 =
         B.take (B.length bs) $ B.append
-          (B.replicate (i `div` 8) 0)
-          (B.drop (i `div` 8) bs)
+          (B.replicate (intToInt64 $ i `div` 8) 0)
+          (B.drop (intToInt64 $ i `div` 8) bs)
       | i `mod` 8 /= 0 =
-        B.pack $ take (B.length bs)
+        B.pack $ take (int64ToInt (B.length bs))
           $ (replicate (i `div` 8) (0 :: Word8))
-          ++ (go (i `mod` 8) 0 $ B.unpack (B.take (B.length bs - (i `div` 8)) bs))
+          ++ (go (i `mod` 8) 0 $ B.unpack (B.take (B.length bs - (intToInt64 $ i `div` 8)) bs))
     where
     go _ _ [] = []
     go j w1 (w2:wst) = (maskR j w1 w2) : go j w2 wst
@@ -59,11 +66,11 @@ instance Bits B.ByteString where
   shiftL bs i
       | i `mod` 8 == 0 =
         B.take (B.length bs) $ B.append
-          (B.drop (i `div` 8) bs)
-          (B.replicate (i `div` 8) 0)
+          (B.drop (intToInt64 $ i `div` 8) bs)
+          (B.replicate (intToInt64 $ i `div` 8) 0)
       | i `mod` 8 /= 0 =
-        B.pack $ drop ((i `div` 8) - B.length bs)
-          $ (tail (go (i `mod` 8) 0 $ B.unpack (B.drop (i `div` 8) bs)))
+        B.pack $ drop (int64ToInt ((intToInt64 $ i `div` 8) - B.length bs))
+          $ (tail (go (i `mod` 8) 0 $ B.unpack (B.drop (intToInt64 $ i `div` 8) bs)))
           ++ (replicate (i `div` 8) 0)
     where
     go j w1 [] = [shiftL w1 j]
@@ -85,8 +92,8 @@ instance Bits B.ByteString where
       | B.length bs > 1 = do
         let shiftedWords =
               B.append
-                (B.drop (nWholeWordsToShift i) bs)
-                (B.take (nWholeWordsToShift i) bs)
+                (B.drop (nWholeWordsToShift $ intToInt64 i) bs)
+                (B.take (nWholeWordsToShift $ intToInt64 i) bs)
         let tmpShiftedBits = (shiftR shiftedWords (i `mod` 8))
         let rotatedBits = (shiftL (B.last shiftedWords) (8 - (i `mod` 8))) .|. (B.head tmpShiftedBits)
         rotatedBits `B.cons` (B.tail tmpShiftedBits)
@@ -100,32 +107,32 @@ instance Bits B.ByteString where
       | B.length bs == 0 = B.empty
       | B.length bs == 1 = B.singleton (rotateL (bs `B.index` 0) i)
       | i `mod` 8 == 0 = B.append
-                          (B.drop (i `div` 8) bs)
-                          (B.take (i `div` 8) bs)
+                          (B.drop (intToInt64 $ i `div` 8) bs)
+                          (B.take (intToInt64 $ i `div` 8) bs)
       | B.length bs > 1 = do
         let shiftedWords =
               B.append
-                (B.drop (i `div` 8) bs)
-                (B.take (i `div` 8) bs)
+                (B.drop (intToInt64 $ i `div` 8) bs)
+                (B.take (intToInt64 $ i `div` 8) bs)
         let tmpShiftedBits = (shiftL shiftedWords (i `mod` 8))
         let rotatedBits = (shiftR (B.head shiftedWords) (8 - (i `mod` 8))) .|. (B.last tmpShiftedBits)
         (B.init tmpShiftedBits) `B.snoc` rotatedBits
   rotateL _ _ = error "I can't believe you've done this."
   {-# INLINE rotateL #-}
 
-  bitSize x = 8 * B.length x
+  bitSize x = 8 * (int64ToInt $ B.length x)
   {-# INLINE bitSize #-}
 
-  bitSizeMaybe x = Just (8 * B.length x)
+  bitSizeMaybe x = Just (8 * (int64ToInt $ B.length x))
   {-# INLINE bitSizeMaybe #-}
 
   isSigned _ = False
   {-# INLINE isSigned #-}
 
-  testBit x i = testBit (B.index x (B.length x - (i `div` 8) - 1)) (i `mod` 8)
+  testBit x i = testBit (B.index x (B.length x - (intToInt64 $ i `div` 8) - 1)) (i `mod` 8)
   {-# INLINE testBit #-}
 
-  bit i = (bit $ mod i 8) `B.cons` (B.replicate (div i 8) (255 :: Word8))
+  bit i = (bit $ mod i 8) `B.cons` (B.replicate (intToInt64 $ div i 8) (255 :: Word8))
   {-# INLINE bit #-}
 
   popCount x = sum $ map popCount $ B.unpack x
